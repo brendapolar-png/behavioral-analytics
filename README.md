@@ -1,2 +1,2 @@
 # behavioral-analytics
-Curso Behavioral Analytics 
+Behavioral Analytics 

@@ -1,0 +1,124 @@
+# Clase 2
+
+## Importar librerías
+
+Primero cargamos las librerías con las que trabajaremos.
+
+```{r librerias}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(DataExplorer)
+library(samplingbook)
+library(survey)
+```
+
+## Exploratory Data Analysis
+
+El código a continuación importa una base de datos aleatoriamente simulada de clientes de un banco de Perú
+
+```{r import-data}
+#| message: false
+
+data = read_csv('data.csv')
+```
+
+La base de datos contiene las siguientes variables: `id`, `sexo`, `edad`, `region`, `ingreso_mensual` y `comportamiento_financiero`.
+
+Para una mayor comprensión de los datos, a continuación se pueden ver los primeros registros de nuestra base de datos.
+
+```{r}
+print(head(data))
+```
+
+Antes de iniciar nuestro análisis, y para entender la distribución de nuestros datos, visualizamos nuestras variables con ayuda del paquete `DataExplorer`.
+
+```{r data-visualization}
+plot_histogram(data)
+plot_bar(data)
+```
+
+## Diseño Muestral
+
+### Muestreo Aleatorio Simple
+
+Primero estimaremos el tamaño de muestra utilizando el paquete `samplingbook`.
+
+```{r}
+N = nrow(data)
+print(N)
+
+n = sample.size.prop(
+    e =  0.05, # margen de error 
+    P = 0.2, # proporción de varianza
+    N = N, # tamaño de nuestra población o público objetivo
+    level = 0.95 # intervalo de confianza
+)
+print(n)
+
+n = n$n
+print(n)
+```
+
+Luego extraemos una muestra aleatoria simple de nuestra `data`.
+
+```{r}
+set.seed(1234)
+muestra_aleatoria_simple = data %>%
+    slice_sample(n = n)
+
+print(muestra_aleatoria_simple)
+```
+
+### Muestreo Aleatorio Estratificado
+
+Para este ejercicio queremos saber cuáles son los ingresos promedio de nuestros clientes que viven en Lima.
+
+Primero, tenemos que delimitar nuestra población objetivo.
+
+```{r}
+publico_objetivo = data%>%
+    filter(region == "Lima")
+
+print(publico_objetivo)
+```
+
+Luego definimos nuestro tamaño de muestra. Para este ejercicio utilizaremos 10% de margen de error por estrato.
+
+```{r}
+# cambiamos data por público objetivo
+N = nrow(publico_objetivo)
+print(N)
+
+n = sample.size.prop(
+    e =  0.1, # margen de error 
+    P = 0.5, # proporción de varianza (siempre queremos maximizarla con 0.5)
+    N = N, # tamaño de nuestra población o público objetivo
+    level = 0.95 # intervalo de confianza
+)
+print(n)
+
+n = n$n
+print(n)
+```
+
+A continuación, extraemos nuestra muestra estratificando por la variable `sexo`.
+
+```{r}
+muestra_aleatoria_estratificada = data %>%
+    group_by(sexo)%>%
+    slice_sample(n = n)
+
+print(muestra_aleatoria_estratificada)
+```
+
+Finalmente, calculamos el ingreso promedio de nuestros clientes en Lima utilizando la muestra estratificada.
+
+
+```{r}
+ingreso_promedio = muestra_aleatoria_estratificada %>%
+    summarise(ingreso_promedio = mean(ingreso_mensual))
+
+print(ingreso_promedio)
+```

@@ -1,0 +1,15 @@
+# Ejercicios calificados
+
+## Instrucciones
+
+Para los ejercicios de sampling, utiliza random seed 1234 para asegurar la reproducibilidad de tus resultados.
+
+1.  **Extrae una muestra representativa de clientes entre 18 y 25 años con ingresos no mayores a S/ 5,000 ¿Cuál es el ingreso promedio de tu muestra? (utiliza margen de error de 0.05, nivel de confianza 0.95, y considera la máxima varianza posible)**
+
+2. **¿Qué variables predicen los ingresos significativamente, y en cuánto? (usa coeficientes no estandarizados)** 
+
+3. **Tomando en cuenta los resultados de tu modelo anterior, ¿qué significa el R2? ¿cómo interpretarías los coeficientes estandarizados?**
+
+4.  **Se te solicita extraer una muestra representativa de clientes entre 25 y 40 años, que tienen comportamiento financiero "sobreendeudado". Por limitaciones de presupuesto puedes encuestar a no más de 200 clientes. Quieres garantizar que la proporción entre hombres y mujeres en tu muestra sea lo más cercana posible a la de la población. ¿Cuáles son los ingresos promedio de los hombres y las mujeres? ¿Cuáles son los ingresos promedio de la población? (considera margen de error 0.10, nivel de confianza 0.95, y máxima varianza posible por estrato)?**
+
+5. **Para el ejercicio a continuación tenemos que descargarnos la base "IBM HR Analytics Employee Attrition & Performance" desde Kaggle. Nuestra variable de interés es "Attrition" o "Rotación de empleados". Queremos saber específicamente si la variable "BusinssTravel" predice la rotación. En nuestra regresión, consideremos únicamente "BusinessTravel" como nuestra variable predictora. ¿Qué nos dicen los odds ratios?**

@@ -1,0 +1,89 @@
+# Clase 2
+
+## Importar librerías
+
+Primero cargamos las librerías con las que trabajaremos.
+
+```{r librerias}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(broom)
+```
+
+## Exploratory Data Analysis
+
+El código a continuación importamos la base de datos que ya conocemos.
+
+```{r import-data}
+#| message: false
+
+data = read_csv('data.csv')
+```
+
+Observamos la clase de las variables en nuestra base de datos.
+
+```{r}
+print(head(data))
+```
+
+Vemos que tenemos que transformar las variables `sexo`, `region` y `comportamiento_financiero`a factores.
+
+```{r data-transformation}
+data_clean = data %>%
+    mutate(
+        sexo = factor(sexo, levels = c('F', 'M')),
+        region = factor(region, levels = c('Lima', 'Provincia')),
+        comportamiento_financiero = factor(comportamiento_financiero, levels = c('Sin deudas', 'Endeudado', 'Sobreendeudado'))
+    )
+```
+
+En los ejercicios a continuación, exploraremos la relación entre el `ingreso_mensual` y las demás variables de la base de datos.
+
+Antes de empezar nuestro análisis inferencial, visualizamos la relación entre el `ingreso_mensual` y las demás variables.
+
+## Regresión lineal múltiple
+
+A continuación, realizamos análisis de regresión para entender cómo las variables `sexo`, `region` y `edad` afectan el `ingreso_mensual`.
+
+```{r regression-analysis}
+# Regresión lineal múltiple
+model = lm(ingreso_mensual ~ sexo + region + edad, data = data_clean)
+print(summary(model))
+```
+
+Con la librería `broom` obtenemos los mismos resultados de una forma más ordenada.
+
+```{r}
+# Resumen ordenado del modelo
+print(glance(model))
+print(tidy(model))
+```
+
+### Coeficientes estandarizados
+
+Cuando las variables predictoras están en diferentes escalas, es útil calcular los coeficientes estandarizados para comparar la magnitud del efecto de cada variable.
+
+```{r standardized-coefficients}
+# Calcular coeficientes estandarizados
+standardized_model = lm(scale(ingreso_mensual) ~ sexo + region + scale(edad), data = data_clean)
+print(tidy(standardized_model))
+```
+
+## Regresión logística
+
+No siempre queremos predecir una variable continua. Muchas veces queremos predecir una variable dicotómica.
+
+En este ejercicio, analizamos cómo las variables `sexo`, `region` y `edad` afectan la probabilidad de que una persona esté `endeudada` (considerando `endeudado` y `sobreendeudado` como una sola categoría).
+
+```{r logistic-regression}
+# Crear variable binaria para endeudamiento
+data_clean = data_clean %>%
+    mutate(endeudado = ifelse(comportamiento_financiero == 'Sin deudas', 0, 1))
+# Regresión logística
+logistic_model = glm(endeudado ~ sexo + region + edad, data = data_clean, family = binomial)
+
+print(tidy(logistic_model, exponentiate = TRUE))
+```
+

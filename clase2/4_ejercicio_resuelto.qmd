@@ -1,1 +1,69 @@
-hola
+## Data
+
+### Importar librerías
+```{r librerias}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(DataExplorer)
+library(samplingbook)
+library(survey)
+```
+
+Base de datos simulada por el profesor
+```{r import-data}
+#| message: false
+
+data = read_csv('C:/Users/BRENDA/Documents/GitHub/behavioral-analytics/clase2/data.csv')
+```
+
+## Ejercicio 1
+
+Extrae una muestra representativa de clientes entre 18 y 25 años con ingresos no mayores a S/ 5,000 ¿Cuál es el ingreso promedio de tu muestra? (utiliza margen de error de 0.05, nivel de confianza 0.95, y considera la máxima varianza posible)
+
+Primero, delimitar el público objetivo: clientes entre 18 y 25 años con ingresos no mayores a 5,000
+
+```{r}
+poblacion_objetivo <- data %>%
+  filter(edad >= 18, edad <= 25, ingreso_mensual <= 5000)
+  nrow(poblacion_objetivo)
+```
+
+Calcular el tamaño de la muestra
+
+```{r}
+n = sample.size.prop(
+    e =  0.05, # margen de error 
+    P = 0.5, # proporción de varianza máxima
+    N = N, # tamaño de nuestra población o público objetivo
+    level = 0.95 # intervalo de confianza
+)
+print(n)
+
+n = n$n
+print(n)
+```
+
+Extraer muestra aleatoria de data
+```{r}
+set.seed(1234)
+muestra_aleatoria_simple = data %>%
+    slice_sample(n = n)
+
+print(muestra_aleatoria_simple)
+```
+
+¿Cuál es el ingreso promedio de tu muestra?
+```{r}
+ingreso_promedio <- mean(muestra_aleatoria_simple$ingreso_mensual)
+print(ingreso_promedio)
+```
+
+## Ejercicio 2
+
+¿Qué variables predicen los ingresos significativamente, y en cuánto? (usa coeficientes no estandarizados)
+
+```{r}
+str(data)
+```

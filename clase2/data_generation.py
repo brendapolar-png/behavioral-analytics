@@ -83,4 +83,5 @@ dataset = pd.DataFrame({
 
 print(dataset.head())
 
-dataset.to_csv('clase2/data.csv', index=False)
+dataset.to_csv(r'C:\Users\BRENDA\Documents\GitHub\behavioral-analytics\clase2\data.csv',
+    index=False)

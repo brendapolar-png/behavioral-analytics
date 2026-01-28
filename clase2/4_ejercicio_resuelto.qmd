@@ -98,4 +98,4 @@ Coeficientes estandarizados
 # Calcular coeficientes estandarizados
 standardized_model = lm(scale(ingreso_mensual) ~ sexo + region + scale(edad), data = data_clean)
 print(tidy(standardized_model))
-```
+```hola

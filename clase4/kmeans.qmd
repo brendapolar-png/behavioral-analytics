@@ -1,0 +1,105 @@
+
+```{r}
+library(tidyverse)
+```
+
+## 1. Load the data
+
+```{r}
+data <- read.table("clase4/marketing_campaign.csv", sep = "\t", header = TRUE)
+glimpse(data)
+```
+
+## 2. Check for missing values
+
+```{r}
+# Check missing values per column
+colSums(is.na(data))
+
+# Check rows with NA in Income
+sum(is.na(data$Income))
+```
+
+## 3. Data Cleaning
+
+```{r}
+df <- data %>%
+  # Remove rows with missing Income
+  filter(!is.na(Income)) %>%
+  # Select only numeric columns relevant for clustering
+  # Exclude ID, date columns, and constant columns (Z_CostContact, Z_Revenue)
+  select(
+    Year_Birth, Income, Kidhome, Teenhome, Recency,
+    MntWines, MntFruits, MntMeatProducts, MntFishProducts, 
+    MntSweetProducts, MntGoldProds,
+    NumDealsPurchases, NumWebPurchases, NumCatalogPurchases, 
+    NumStorePurchases, NumWebVisitsMonth,
+    AcceptedCmp1, AcceptedCmp2, AcceptedCmp3, AcceptedCmp4, AcceptedCmp5,
+    Complain, Response
+  )
+
+# Verify all columns are numeric
+str(df)
+```
+
+## 4. Check for outliers
+
+```{r}
+summary(df)
+```
+
+## 5. Scale the data (required for k-means)
+
+```{r}
+# K-means is sensitive to scale, so we standardize all variables
+df_scaled <- scale(df)
+
+# Convert back to data frame
+df_scaled <- as.data.frame(df_scaled)
+
+# Check the scaled data
+head(df_scaled)
+```
+
+## 6.1 Hierarchical Clustering to determine number of clusters
+
+```{r}
+# Compute distance matrix
+dist_matrix <- dist(df_scaled)
+# Perform hierarchical clustering
+hc <- hclust(dist_matrix)
+# Plot dendrogram
+plot(hc, labels = FALSE)
+```
+
+## 6.2 Run K-Means
+
+```{r}
+set.seed(123)  # For reproducibility
+kmeans_result <- kmeans(df_scaled, centers = 4, nstart = 25)
+
+# View results
+kmeans_result
+```
+
+## 7. Analyze clusters
+
+```{r}
+# Add cluster assignment to original (unscaled) data
+df$cluster <- as.factor(kmeans_result$cluster)
+
+# Cluster sizes
+table(df$cluster)
+
+# Cluster means for key variables
+df %>%
+  group_by(cluster) %>%
+  summarise(
+    n = n(),
+    avg_income = mean(Income),
+    avg_wines = mean(MntWines),
+    avg_meat = mean(MntMeatProducts),
+    avg_web_visits = mean(NumWebVisitsMonth),
+    avg_store_purchases = mean(NumStorePurchases)
+  )
+```

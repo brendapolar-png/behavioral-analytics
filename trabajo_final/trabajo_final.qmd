@@ -1,0 +1,133 @@
+---
+title: "TRABAJO FINAL - Behavioral Analytics"
+subtitle: "Expermiento de negocio: caso de compañía de seguros B2B"
+
+format: html
+---
+#### Integrantes:
+* Kamilla Contreras
+* Jennifer Meza
+* Anneth 
+* Luiggi Centeno
+* Brenda Polar
+
+#### 1. Contexto del negocio
+La compañía de seguros X trabaja principalmente con negocios y empresas. Su función es ayudar a que las empresas operen con más seguridad, protegiéndolas frente a riesgos comunes del día a día. Ofrece garantías (cartas fianza) para respaldar contratos, seguros de crédito para cubrirse si un cliente no paga, y seguros para proteger bienes, transporte de mercadería y responsabilidades frente a terceros.
+
+#### 2. Objetivo de negocio
+
+#### 3. Intervención:
+
+
+
+#### 4. Sesgo por variables omitidas
+¿Qué variables, observables o no observables, pueden estar relacionadas con mi variable independiente y/o dependiente?
+```{r}
+# Importar librerías
+install.packages("psych")
+install.packages("corrplot")
+install.packages("pwr")
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(psych)
+library(corrplot)
+library(pwr)
+```
+
+```{r}
+data = read_excel('C:/Users/BRENDA/Documents/GitHub/behavioral-analytics/trabajo_final/cartera_enriquecida.xlsx')
+names(data)
+```
+Generar variable dependiente en el dataset: pago_30d
+
+pago_30d = 1 si:
+  Fecha Pago existe
+  y Fecha Pago ≥ inicio_gestion
+  y Fecha Pago ≤ inicio_gestion + 30 días
+
+pago_30d = 0 en caso contrario
+```{r}
+data <- data %>%
+  mutate(
+    inicio_gestion = `Fecha Emisión`,
+    pago_30d = if_else(
+      !is.na(`fecha_pago`) &
+      `fecha_pago` >= inicio_gestion &
+      `fecha_pago` <= inicio_gestion + days(30),
+      1L, 0L))
+```
+Normalizar variables y generar matriz de correlación
+```{r}
+vars_corr <- data %>%
+  transmute(
+    pago_30d,
+    dpd_al_corte,
+    dpd_promedio_historico,
+    dias_desde_ultimo_pago,
+    log_monto = log(`Monto Soles` + 1),
+    log_saldo = log(`saldo_total_cliente` + 1),
+    score_contactabilidad,
+    n_intentos_30d = log(`n_intentos_contacto_30d` + 1),
+    flag_contacto_exitoso_30d,
+    tel_valido,
+    correo_valido,
+    dias_a_fin_vigencia_poliza
+  )
+```
+```{r}
+corr_matrix <- corr.test(
+  vars_corr,
+  method = "spearman",
+  use = "pairwise"
+)
+
+# Gráfico de la matriz de correlación
+corrplot(corr_matrix$r, method = "circle", type = "upper", tl.col = "black", tl.srt = 45)
+
+corr_matrix$r
+```
+Variables observables correlacionadas con la variable dependiente (pago_30d) y que pueden generar sesgo:
+
+* correo_valido (r = -0.548) (o tel_valido (r = -0.528))
+Son condiciones habilitantes de la cobranza B2B: si no se tiene canal válido, el pago puede no ocurrir por una razón operacional.
+* dias_desde_ultimo_pago (r con pago_30d = -0.514)
+Mientras más tiempo pasó sin pagar, más “enfriado” está el caso y más difícil es lograr pago rápido. Suele reflejar que el pago ya quedó fuera del flujo normal de tesorería.
+* log_saldo (r = -0.515)
+Captura la carga económica pendiente real (lo que efectivamente falta pagar).
+En la empresa X, saldos altos suelen activar más aprobaciones, más control y más fricción administrativa.
+
+Variables no observables que pueden generar sesgo:
+* Liquidez real del cliente
+* Prioridades internas del cliente
+* Negociaciones externas no registradas
+
+#### 5. Diseño experimental
+
+#### 6. Análisis de poder
+¿Cuál es el efecto mínimo que vale la pena detectar para el negocio? ¿Cuál es el tamaño de muestra que necesito para detectar dicho efecto?
+
+* Supuesto: El negocio considera valioso un aumento de al menos 5 puntos porcentuales en la tasa de pago. 
+* Efecto mínimo a detectar: 0.05
+* Nivel de significancia: α = 0.05 
+* Poder deseado: 80% (0.8)
+
+```{r}
+# Calcular el tamaño del efecto
+p0 <- sum(data$pago_30d) / nrow(data)
+p1 <- p0 + 0.05
+alpha <- 0.05
+power <- 0.8
+print(p0)
+print(p1)
+```
+```{r}
+effect_size <- ES.h(p1, p0)
+print(effect_size)
+```
+```{r}
+sample_size <- pwr.2p.test(h = effect_size, sig.level = alpha, power = power, alternative = "two.sided")
+sample_size
+```
+
+El efecto mínimo que vale la pena detectar para el negocio es un incremento de 5 puntos porcentuales en la tasa de pago dentro de los 30 días, es decir, pasar de la tasa actual observada (~16%) a un 21%. Para poder detectar esta mejora con un poder estadístico del 80% y un nivel de significancia del 5%, se requiere un tamaño de muestra de aproximadamente 960 clientes por grupo (control y tratamiento). Este cálculo asegura que el experimento tenga suficiente sensibilidad para evaluar de manera confiable el impacto de la estrategia personalizada de cobranza.

@@ -1,52 +1,92 @@
 ---
 title: "TRABAJO FINAL - Behavioral Analytics"
 subtitle: "Expermiento de negocio: caso de compañía de seguros B2B"
-
 format: html
 ---
-#### Integrantes:
+#### **Integrantes:**
 * Kamilla Contreras
-* Jennifer Meza
-* Anneth 
+* Jennifer Meza 
+* Anneth Arteaga
 * Luiggi Centeno
 * Brenda Polar
 
-#### 1. Contexto del negocio
+#### **1. Contexto del negocio**
 La compañía de seguros X trabaja principalmente con negocios y empresas. Su función es ayudar a que las empresas operen con más seguridad, protegiéndolas frente a riesgos comunes del día a día. Ofrece garantías (cartas fianza) para respaldar contratos, seguros de crédito para cubrirse si un cliente no paga, y seguros para proteger bienes, transporte de mercadería y responsabilidades frente a terceros.
 
-#### 2. Objetivo de negocio
+#### **2. Objetivo de negocio**
 
-#### 3. Intervención:
+La variable que la compañía de seguros X necesita mover es la tasa de recuperación de deuda en un horizonte de 30 días posteriores a la emisión de la factura, medida como la probabilidad de que un documento o cliente realice al menos un pago dentro de los 30 días siguientes a dicha emisión, o alternativamente como el monto recuperado en dicho período en relación con el Monto Soles adeudado.
+
+Esta variable es crítica porque impacta directamente el flujo de caja, la necesidad de provisiones y el riesgo crediticio de la cartera. A diferencia de métricas intermedias (por ejemplo, intentos de contacto o promesas de pago), la recuperación efectiva de deuda representa el resultado económico final que la función de cobranzas busca maximizar. En este contexto, la gestión de cobranzas se define como el seguimiento del pago del documento desde el momento de su emisión, incluyendo todas las acciones de contacto y recordatorio realizadas dentro de los 30 días posteriores.
+
+Además, la recuperación en una ventana corta de 30 días es altamente accionable desde la gestión de cobranzas, ya que puede ser influenciada por decisiones operativas como el canal de contacto, el timing de las gestiones, la intensidad de seguimiento y el tipo de mensaje utilizado. Al medirse en un horizonte acotado, permite evaluar el impacto causal de una intervención de manera rápida y con menor contaminación de factores externos de largo plazo, lo que la convierte en una variable especialmente adecuada para un diseño experimental.
+
+#### **3. Intervención:**
+
+* **Objetivo de la intervención:**
+  El objetivo de la intervención es incrementar la tasa de recuperación de deuda en los 30 días posteriores al inicio de la gestión de cobranza, modificando el comportamiento de pago oportuno del responsable administrativo o financiero de las empresas clientes mediante una asignación más eficiente de las estrategias de contacto.
+
+* **Fundamento conductual:**
+  El retraso en el pago de las primas no se explica únicamente por la capacidad financiera del cliente, sino por limitaciones conductuales como la postergación (sesgo presente), la atención fragmentada y la baja saliencia de las consecuencias futuras del no pago. La evidencia en la base de datos muestra atrasos persistentes incluso en clientes con alta probabilidad de recuperación y contactabilidad, lo que sugiere una desalineación entre la estrategia de cobranza actual y el perfil conductual de los clientes.
+
+* **Descripción de la intervención:**
+  La intervención consiste en implementar una estrategia de cobranza personalizada basada en score, reemplazando la estrategia estándar (Business As Usual). La asignación del canal, el tipo de contacto y el nivel de esfuerzo se define utilizando información ya disponible en la base de datos, sin incrementar la intensidad total de contacto, sino optimizando su asignación.
+
+  Variables utilizadas para la personalización. La personalización se basa en los siguientes indicadores: 
+  - score_prioridad_cobranza
+  - probabilidad_recuperacion
+  - score_contactabilidad
+  - canal_preferido
+  - etapa_cobranza
+  - dpd_al_corte
+  - Monto Soles. 
+
+  Estas variables capturan la severidad de la mora, la probabilidad de pago y la facilidad de contacto.
+
+* **Ejemplo operativo de la intervención:**
+  Clientes con alta probabilidad de recuperación (probabilidad_recuperacion) y alta contactabilidad (score_contactabilidad) reciben un contacto temprano por su canal preferido con solicitud de promesa de pago. 
+  
+  Clientes con baja probabilidad de recuperación (probabilidad_recuperacion) y alto monto de deuda (Monto Soles) son gestionados por un ejecutivo senior mediante llamada directa. 
+  
+  Clientes con baja contactabilidad (score_contactabilidad) reciben una estrategia digital alternativa o comunicación formal escrita. 
+  
+  El grupo control continúa con la estrategia estándar sin personalización.
+
+* **Variable de resultado asociada a la intervención:**
+  El impacto de la intervención se mide mediante un indicador binario de pago en 30 días (pago_30d), que toma el valor de 1 si se registra al menos un pago dentro de los 30 días posteriores a la fecha de emisión y 0 en caso contrario.
 
 
-
-#### 4. Sesgo por variables omitidas
+#### 4. **Sesgo por variables omitidas**
 ¿Qué variables, observables o no observables, pueden estar relacionadas con mi variable independiente y/o dependiente?
-```{r}
+```{r, message=FALSE, warning=FALSE}
 # Importar librerías
-install.packages("psych")
-install.packages("corrplot")
-install.packages("pwr")
 library(readxl)
 library(dplyr)
 library(lubridate)
 library(psych)
 library(corrplot)
 library(pwr)
+library(knitr)
+library(kableExtra)
 ```
 
-```{r}
+```{r, warning=FALSE}
+# Cargar datos
 data = read_excel('C:/Users/BRENDA/Documents/GitHub/behavioral-analytics/trabajo_final/cartera_enriquecida.xlsx')
 names(data)
 ```
-Generar variable dependiente en el dataset: pago_30d
+**Generar variable dependiente en el dataset: pago_30d**
 
-pago_30d = 1 si:
-  Fecha Pago existe
-  y Fecha Pago ≥ inicio_gestion
-  y Fecha Pago ≤ inicio_gestion + 30 días
+<div style="border:1px solid #999; padding:12px; border-radius:6px; background-color:#f9f9f9;">
+<b>pago_30d = 1</b> si:
+<ul>
+  <li>Existe <i>Fecha Pago</i></li>
+  <li><i>Fecha Pago</i> ≥ <i>inicio_gestion (Fecha Emisión)</i></li>
+  <li><i>Fecha Pago</i> ≤ <i>inicio_gestion (Fecha Emisión)</i> + 30 días</li>
+</ul>
 
-pago_30d = 0 en caso contrario
+<b>pago_30d = 0</b> en caso contrario
+</div>
 ```{r}
 data <- data %>%
   mutate(
@@ -57,8 +97,10 @@ data <- data %>%
       `fecha_pago` <= inicio_gestion + days(30),
       1L, 0L))
 ```
-Normalizar variables y generar matriz de correlación
+Para poder identificar variables omitidas observables (dentro de la base), se procede a calcular la matriz de correlación entre la variable dependiente (pago_30d) y las demás variables numéricas del dataset que podrían estar relacionadas con el pago en 30 días.
+
 ```{r}
+# Normalizar variables
 vars_corr <- data %>%
   transmute(
     pago_30d,
@@ -74,43 +116,74 @@ vars_corr <- data %>%
     correo_valido,
     dias_a_fin_vigencia_poliza
   )
-```
-```{r}
+
+# Generar matriz de correlación
 corr_matrix <- corr.test(
   vars_corr,
   method = "spearman",
-  use = "pairwise"
-)
-
-# Gráfico de la matriz de correlación
-corrplot(corr_matrix$r, method = "circle", type = "upper", tl.col = "black", tl.srt = 45)
-
-corr_matrix$r
+  use = "pairwise")
 ```
+
+**Matriz de correlación**
+```{r, echo=FALSE}
+kable(corr_matrix$r, digits = 2) %>%
+  kable_styling(bootstrap_options = "responsive")
+```
+
+```{r, echo=FALSE, fig.width=7, fig.height=6}
+# Gráfico de la matriz de correlación
+corrplot(
+  corr_matrix$r,
+  method = "circle",
+  type = "upper",
+  tl.col = "black",
+  tl.srt = 45
+)
+```
+
 Variables observables correlacionadas con la variable dependiente (pago_30d) y que pueden generar sesgo:
 
-* correo_valido (r = -0.548) (o tel_valido (r = -0.528))
-Son condiciones habilitantes de la cobranza B2B: si no se tiene canal válido, el pago puede no ocurrir por una razón operacional.
-* dias_desde_ultimo_pago (r con pago_30d = -0.514)
-Mientras más tiempo pasó sin pagar, más “enfriado” está el caso y más difícil es lograr pago rápido. Suele reflejar que el pago ya quedó fuera del flujo normal de tesorería.
-* log_saldo (r = -0.515)
-Captura la carga económica pendiente real (lo que efectivamente falta pagar).
-En la empresa X, saldos altos suelen activar más aprobaciones, más control y más fricción administrativa.
+* **correo_valido (r = -0.548) (o tel_valido (r = -0.528))**
+  Son condiciones habilitantes de la cobranza B2B: si no se tiene canal válido, el pago puede no ocurrir por una razón operacional.
+* **dias_desde_ultimo_pago (r con pago_30d = -0.514)**
+  Mientras más tiempo pasó sin pagar, más “enfriado” está el caso y más difícil es lograr pago rápido. Suele reflejar que el pago ya quedó fuera del flujo normal de tesorería.
+* **log_saldo (r = -0.515)**
+  Captura la carga económica pendiente real (lo que efectivamente falta pagar).En la empresa X, saldos altos suelen activar más aprobaciones, más control y más fricción administrativa.
 
 Variables no observables que pueden generar sesgo:
+
 * Liquidez real del cliente
 * Prioridades internas del cliente
 * Negociaciones externas no registradas
 
-#### 5. Diseño experimental
+#### **5. Diseño experimental**
 
-#### 6. Análisis de poder
+El diseño experimental que nos permite inferir causalidad es el experimento controlado aleatorizado, es decir, un experimento de A/B test en donde agrupamos en dos grupos:
+Por un lado, existe el grupo de control al cual no se aplica la estrategia de intervención, por lo cual, seguirán siendo evaluadas con las acciones actuales del negocio.
+
+Por otro lado, el grupo de tratamiento será el que experimente nuestra estrategia de intervención y es al que dedicaremos más esfuerzos de monitoreo y ejecución.
+Gracias a la aleatorización tanto las variables observables como las no observables van a estar de manera proporcional en ambos grupos del experimento, de esa manera se elimina el sesgo sistemático ya que al estar repartidas en ambos grupos aleatoriamente, las diferencias que se encuentren en ambos serán atribuibles al tratamiento de los datos y la forma de ejecución del experimento y no así a las variables que fueron omitidas.  
+
+Finalmente, para la empresa X es factible aplicar el experimento porque:
+
+- Se cuenta con más de 1900 registros en los cuales aún no se ha recuperado la deuda, por lo cual, se puede seleccionar una muestra significativa.
+- Se cuenta con más de un canal disponible de contacto, entre ellos, el correo electrónico y el número telefónico.
+- Se cuenta con una herramienta de CRM en la cual se segmenta los clientes y se pueden realizar recordatorios para contactar con los clientes antes que su deuda supere los 30 días desde su fecha de emisión.
+- Se cuenta con un equipo de cobranzas y de ejecutivos comerciales, los cuales pueden trabajar en conjunto para el contacto con los clientes y el uso de la plataforma de CRM.
+- La gerencia muestra su apoyo en la realización de experimentos y/o proyectos que mejoren los procesos internos de la empresa, es decir, están abiertos a destinar tiempo y recursos en la mejora continua.
+
+#### **6. Análisis de poder**
 ¿Cuál es el efecto mínimo que vale la pena detectar para el negocio? ¿Cuál es el tamaño de muestra que necesito para detectar dicho efecto?
 
-* Supuesto: El negocio considera valioso un aumento de al menos 5 puntos porcentuales en la tasa de pago. 
-* Efecto mínimo a detectar: 0.05
-* Nivel de significancia: α = 0.05 
-* Poder deseado: 80% (0.8)
+<div style="border:1px solid #999; padding:14px; border-radius:6px; background-color:#f7f7f7;">
+<strong>Supuestos para el análisis de poder estadístico</strong>
+<ul style="margin-top:8px;">
+  <li><b>Supuesto:</b> El negocio considera valioso un aumento de al menos <b>5 puntos porcentuales</b> en la tasa de pago.</li>
+  <li><b>Efecto mínimo a detectar:</b> 0.05</li>
+  <li><b>Nivel de significancia:</b> &alpha; = 0.05</li>
+  <li><b>Poder deseado:</b> 80% (0.8)</li>
+</ul>
+</div>
 
 ```{r}
 # Calcular el tamaño del efecto
@@ -118,16 +191,25 @@ p0 <- sum(data$pago_30d) / nrow(data)
 p1 <- p0 + 0.05
 alpha <- 0.05
 power <- 0.8
-print(p0)
-print(p1)
-```
-```{r}
+
 effect_size <- ES.h(p1, p0)
-print(effect_size)
+
+sample_size <- pwr.2p.test(h = effect_size, 
+sig.level = alpha, 
+power = power, 
+alternative = "two.sided")
 ```
-```{r}
-sample_size <- pwr.2p.test(h = effect_size, sig.level = alpha, power = power, alternative = "two.sided")
-sample_size
+**Resultados del análisis de poder**
+```{r, echo=FALSE}
+resultado <- data.frame(
+  "Efecto mínimo detectable" = effect_size,
+  "Nivel de significancia (α)" = alpha,
+  "Poder estadístico" = power,
+  "Tamaño de muestra por grupo" = ceiling(sample_size$n))
+
+knitr::kable(resultado)
+
+
 ```
 
 El efecto mínimo que vale la pena detectar para el negocio es un incremento de 5 puntos porcentuales en la tasa de pago dentro de los 30 días, es decir, pasar de la tasa actual observada (~16%) a un 21%. Para poder detectar esta mejora con un poder estadístico del 80% y un nivel de significancia del 5%, se requiere un tamaño de muestra de aproximadamente 960 clientes por grupo (control y tratamiento). Este cálculo asegura que el experimento tenga suficiente sensibilidad para evaluar de manera confiable el impacto de la estrategia personalizada de cobranza.

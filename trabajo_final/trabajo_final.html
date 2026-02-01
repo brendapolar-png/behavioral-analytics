@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>TRABAJO FINAL - Behavioral Analytics</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="trabajo_final_files/libs/clipboard/clipboard.min.js"></script>
+<script src="trabajo_final_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="trabajo_final_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="trabajo_final_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="trabajo_final_files/libs/quarto-html/popper.min.js"></script>
+<script src="trabajo_final_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="trabajo_final_files/libs/quarto-html/anchor.min.js"></script>
+<link href="trabajo_final_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="trabajo_final_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="trabajo_final_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="trabajo_final_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="trabajo_final_files/libs/bootstrap/bootstrap-9e3ffae467580fdb927a41352e75a2e0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="trabajo_final_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="trabajo_final_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">TRABAJO FINAL - Behavioral Analytics</h1>
+<p class="subtitle lead">Expermiento de negocio: caso de compañía de seguros B2B</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="integrantes" class="level4">
+<h4 class="anchored" data-anchor-id="integrantes"><strong>Integrantes:</strong></h4>
+<ul>
+<li>Kamilla Contreras</li>
+<li>Jennifer Meza</li>
+<li>Anneth Arteaga</li>
+<li>Luiggi Centeno</li>
+<li>Brenda Polar</li>
+</ul>
+</section>
+<section id="contexto-del-negocio" class="level4">
+<h4 class="anchored" data-anchor-id="contexto-del-negocio"><strong>1. Contexto del negocio</strong></h4>
+<p>La compañía de seguros X trabaja principalmente con negocios y empresas. Su función es ayudar a que las empresas operen con más seguridad, protegiéndolas frente a riesgos comunes del día a día. Ofrece garantías (cartas fianza) para respaldar contratos, seguros de crédito para cubrirse si un cliente no paga, y seguros para proteger bienes, transporte de mercadería y responsabilidades frente a terceros.</p>
+</section>
+<section id="objetivo-de-negocio" class="level4">
+<h4 class="anchored" data-anchor-id="objetivo-de-negocio"><strong>2. Objetivo de negocio</strong></h4>
+<p>La variable que la compañía de seguros X necesita mover es la tasa de recuperación de deuda en un horizonte de 30 días posteriores a la emisión de la factura, medida como la probabilidad de que un documento o cliente realice al menos un pago dentro de los 30 días siguientes a dicha emisión, o alternativamente como el monto recuperado en dicho período en relación con el Monto Soles adeudado.</p>
+<p>Esta variable es crítica porque impacta directamente el flujo de caja, la necesidad de provisiones y el riesgo crediticio de la cartera. A diferencia de métricas intermedias (por ejemplo, intentos de contacto o promesas de pago), la recuperación efectiva de deuda representa el resultado económico final que la función de cobranzas busca maximizar. En este contexto, la gestión de cobranzas se define como el seguimiento del pago del documento desde el momento de su emisión, incluyendo todas las acciones de contacto y recordatorio realizadas dentro de los 30 días posteriores.</p>
+<p>Además, la recuperación en una ventana corta de 30 días es altamente accionable desde la gestión de cobranzas, ya que puede ser influenciada por decisiones operativas como el canal de contacto, el timing de las gestiones, la intensidad de seguimiento y el tipo de mensaje utilizado. Al medirse en un horizonte acotado, permite evaluar el impacto causal de una intervención de manera rápida y con menor contaminación de factores externos de largo plazo, lo que la convierte en una variable especialmente adecuada para un diseño experimental.</p>
+</section>
+<section id="intervención" class="level4">
+<h4 class="anchored" data-anchor-id="intervención"><strong>3. Intervención:</strong></h4>
+<ul>
+<li><p><strong>Objetivo de la intervención:</strong> El objetivo de la intervención es incrementar la tasa de recuperación de deuda en los 30 días posteriores al inicio de la gestión de cobranza, modificando el comportamiento de pago oportuno del responsable administrativo o financiero de las empresas clientes mediante una asignación más eficiente de las estrategias de contacto.</p></li>
+<li><p><strong>Fundamento conductual:</strong> El retraso en el pago de las primas no se explica únicamente por la capacidad financiera del cliente, sino por limitaciones conductuales como la postergación (sesgo presente), la atención fragmentada y la baja saliencia de las consecuencias futuras del no pago. La evidencia en la base de datos muestra atrasos persistentes incluso en clientes con alta probabilidad de recuperación y contactabilidad, lo que sugiere una desalineación entre la estrategia de cobranza actual y el perfil conductual de los clientes.</p></li>
+<li><p><strong>Descripción de la intervención:</strong> La intervención consiste en implementar una estrategia de cobranza personalizada basada en score, reemplazando la estrategia estándar (Business As Usual). La asignación del canal, el tipo de contacto y el nivel de esfuerzo se define utilizando información ya disponible en la base de datos, sin incrementar la intensidad total de contacto, sino optimizando su asignación.</p>
+<p>Variables utilizadas para la personalización. La personalización se basa en los siguientes indicadores:</p>
+<ul>
+<li>score_prioridad_cobranza</li>
+<li>probabilidad_recuperacion</li>
+<li>score_contactabilidad</li>
+<li>canal_preferido</li>
+<li>etapa_cobranza</li>
+<li>dpd_al_corte</li>
+<li>Monto Soles.</li>
+</ul>
+<p>Estas variables capturan la severidad de la mora, la probabilidad de pago y la facilidad de contacto.</p></li>
+<li><p><strong>Ejemplo operativo de la intervención:</strong> Clientes con alta probabilidad de recuperación (probabilidad_recuperacion) y alta contactabilidad (score_contactabilidad) reciben un contacto temprano por su canal preferido con solicitud de promesa de pago.</p>
+<p>Clientes con baja probabilidad de recuperación (probabilidad_recuperacion) y alto monto de deuda (Monto Soles) son gestionados por un ejecutivo senior mediante llamada directa.</p>
+<p>Clientes con baja contactabilidad (score_contactabilidad) reciben una estrategia digital alternativa o comunicación formal escrita.</p>
+<p>El grupo control continúa con la estrategia estándar sin personalización.</p></li>
+<li><p><strong>Variable de resultado asociada a la intervención:</strong> El impacto de la intervención se mide mediante un indicador binario de pago en 30 días (pago_30d), que toma el valor de 1 si se registra al menos un pago dentro de los 30 días posteriores a la fecha de emisión y 0 en caso contrario.</p></li>
+</ul>
+</section>
+<section id="sesgo-por-variables-omitidas" class="level4">
+<h4 class="anchored" data-anchor-id="sesgo-por-variables-omitidas">4. <strong>Sesgo por variables omitidas</strong></h4>
+<p>¿Qué variables, observables o no observables, pueden estar relacionadas con mi variable independiente y/o dependiente?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Importar librerías</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pwr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargar datos</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">read_excel</span>(<span class="st">'C:/Users/BRENDA/Documents/GitHub/behavioral-analytics/trabajo_final/cartera_enriquecida.xlsx'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Nro. Documento"                   "Razón Social"                    
+ [3] "RUC"                              "Tipo Documento"                  
+ [5] "Moneda Original"                  "Monto Original"                  
+ [7] "Monto Soles"                      "Provisión Total"                 
+ [9] "Glosa"                            "Tipo Operación"                  
+[11] "Estado Documento"                 "Fecha Emisión"                   
+[13] "Fecha Vencimiento"                "Días de Vencimiento"             
+[15] "Tramo"                            "Días de Vencimiento a fin de mes"
+[17] "Tramo fin de mes"                 "Tramo Cliente"                   
+[19] "Póliza"                           "Movimiento"                      
+[21] "Modalidad"                        "Cód. Proyecto."                  
+[23] "Tomador / Consorcio"              "Clasificación Cliente"           
+[25] "Gestión de Cobranzas"             "Observación"                     
+[27] "Producto"                         "Canal"                           
+[29] "Intermediario"                    "Ejecutivo Comercial"             
+[31] "Ejecutivo Cobranza"               "¿Campaña?"                       
+[33] "Provisión Adicional"              "Provisión Vigente"               
+[35] "Estado Póliza"                    "Inicio de Vigencia"              
+[37] "Fin de Vigencia"                  "Nro. Teléfono 1"                 
+[39] "Nro. Teléfono 2"                  "Correo"                          
+[41] "Direcciones"                      "Fecha Pago"                      
+[43] "fecha_pago"                       "cliente_key"                     
+[45] "saldo_total_cliente"              "n_docs_abiertos_cliente"         
+[47] "dpd_al_corte"                     "Tramo_calc"                      
+[49] "Tramo_fin_mes_calc"               "fecha_ultimo_pago"               
+[51] "dias_desde_ultimo_pago"           "dpd_promedio_historico"          
+[53] "dias_a_fin_vigencia_poliza"       "tel_valido"                      
+[55] "correo_valido"                    "direccion_valida"                
+[57] "score_contactabilidad"            "canal_preferido"                 
+[59] "fecha_ultima_gestion"             "n_intentos_contacto_7d"          
+[61] "n_intentos_contacto_30d"          "flag_contacto_exitoso_30d"       
+[63] "resultado_ultima_gestion"         "ejecutivo_ultima_gestion"        
+[65] "fecha_proximo_seguimiento"        "etapa_cobranza"                  
+[67] "motivo_no_pago"                   "promesa_pago_fecha"              
+[69] "promesa_pago_monto"               "monto_total_prometido_30d"       
+[71] "flag_promesa_incumplida_30d"      "flag_documento_en_disputa"       
+[73] "interes_estimado_devengado"       "segmento_valor_cliente"          
+[75] "probabilidad_recuperacion"        "score_prioridad_cobranza"        
+[77] "estrategia_recomendada"          </code></pre>
+</div>
+</div>
+<p><strong>Generar variable dependiente en el dataset: pago_30d</strong></p>
+<div style="border:1px solid #999; padding:12px; border-radius:6px; background-color:#f9f9f9;">
+<b>pago_30d = 1</b> si:
+<ul>
+<li>
+Existe <i>Fecha Pago</i>
+</li>
+<li>
+<i>Fecha Pago</i> ≥ <i>inicio_gestion (Fecha Emisión)</i>
+</li>
+<li>
+<i>Fecha Pago</i> ≤ <i>inicio_gestion (Fecha Emisión)</i> + 30 días
+</li>
+</ul>
+<p><b>pago_30d = 0</b> en caso contrario</p>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">inicio_gestion =</span> <span class="st">`</span><span class="at">Fecha Emisión</span><span class="st">`</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">pago_30d =</span> <span class="fu">if_else</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">fecha_pago</span><span class="st">`</span>) <span class="sc">&amp;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">fecha_pago</span><span class="st">`</span> <span class="sc">&gt;=</span> inicio_gestion <span class="sc">&amp;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">fecha_pago</span><span class="st">`</span> <span class="sc">&lt;=</span> inicio_gestion <span class="sc">+</span> <span class="fu">days</span>(<span class="dv">30</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="dv">1</span>L, <span class="dv">0</span>L))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Para poder identificar variables omitidas observables (dentro de la base), se procede a calcular la matriz de correlación entre la variable dependiente (pago_30d) y las demás variables numéricas del dataset que podrían estar relacionadas con el pago en 30 días.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalizar variables</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>vars_corr <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    pago_30d,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    dpd_al_corte,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    dpd_promedio_historico,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    dias_desde_ultimo_pago,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_monto =</span> <span class="fu">log</span>(<span class="st">`</span><span class="at">Monto Soles</span><span class="st">`</span> <span class="sc">+</span> <span class="dv">1</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_saldo =</span> <span class="fu">log</span>(<span class="st">`</span><span class="at">saldo_total_cliente</span><span class="st">`</span> <span class="sc">+</span> <span class="dv">1</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    score_contactabilidad,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_intentos_30d =</span> <span class="fu">log</span>(<span class="st">`</span><span class="at">n_intentos_contacto_30d</span><span class="st">`</span> <span class="sc">+</span> <span class="dv">1</span>),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    flag_contacto_exitoso_30d,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    tel_valido,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    correo_valido,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    dias_a_fin_vigencia_poliza</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Generar matriz de correlación</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>corr_matrix <span class="ot">&lt;-</span> <span class="fu">corr.test</span>(</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  vars_corr,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"spearman"</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">use =</span> <span class="st">"pairwise"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Matriz de correlación</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table caption-top table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">pago_30d</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">dpd_al_corte</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">dpd_promedio_historico</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">dias_desde_ultimo_pago</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">log_monto</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">log_saldo</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">score_contactabilidad</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">n_intentos_30d</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">flag_contacto_exitoso_30d</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">tel_valido</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">correo_valido</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">dias_a_fin_vigencia_poliza</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">pago_30d</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">-0.53</td>
+<td style="text-align: right;">-0.46</td>
+<td style="text-align: right;">-0.51</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">-0.51</td>
+<td style="text-align: right;">-0.54</td>
+<td style="text-align: right;">-0.28</td>
+<td style="text-align: right;">-0.38</td>
+<td style="text-align: right;">-0.53</td>
+<td style="text-align: right;">-0.55</td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dpd_al_corte</td>
+<td style="text-align: right;">-0.53</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">-0.50</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">-0.79</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">dpd_promedio_historico</td>
+<td style="text-align: right;">-0.46</td>
+<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">-0.50</td>
+<td style="text-align: right;">0.54</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.51</td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: right;">-0.76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dias_desde_ultimo_pago</td>
+<td style="text-align: right;">-0.51</td>
+<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">-0.51</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.54</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">-0.80</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log_monto</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">-0.50</td>
+<td style="text-align: right;">-0.50</td>
+<td style="text-align: right;">-0.51</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">-0.02</td>
+<td style="text-align: right;">-0.34</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">-0.22</td>
+<td style="text-align: right;">-0.34</td>
+<td style="text-align: right;">-0.33</td>
+<td style="text-align: right;">0.62</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log_saldo</td>
+<td style="text-align: right;">-0.51</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.54</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">-0.02</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.49</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.72</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">score_contactabilidad</td>
+<td style="text-align: right;">-0.54</td>
+<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">-0.34</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0.67</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">-0.31</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_intentos_30d</td>
+<td style="text-align: right;">-0.28</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">-0.24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">flag_contacto_exitoso_30d</td>
+<td style="text-align: right;">-0.38</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.51</td>
+<td style="text-align: right;">0.54</td>
+<td style="text-align: right;">-0.22</td>
+<td style="text-align: right;">0.49</td>
+<td style="text-align: right;">0.67</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.66</td>
+<td style="text-align: right;">0.66</td>
+<td style="text-align: right;">-0.18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tel_valido</td>
+<td style="text-align: right;">-0.53</td>
+<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">-0.34</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">0.66</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.94</td>
+<td style="text-align: right;">-0.32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">correo_valido</td>
+<td style="text-align: right;">-0.55</td>
+<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">-0.33</td>
+<td style="text-align: right;">0.72</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">0.66</td>
+<td style="text-align: right;">0.94</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">-0.24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dias_a_fin_vigencia_poliza</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">-0.79</td>
+<td style="text-align: right;">-0.76</td>
+<td style="text-align: right;">-0.80</td>
+<td style="text-align: right;">0.62</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">-0.31</td>
+<td style="text-align: right;">-0.24</td>
+<td style="text-align: right;">-0.18</td>
+<td style="text-align: right;">-0.32</td>
+<td style="text-align: right;">-0.24</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="trabajo_final_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Variables observables correlacionadas con la variable dependiente (pago_30d) y que pueden generar sesgo:</p>
+<ul>
+<li><strong>correo_valido (r = -0.548) (o tel_valido (r = -0.528))</strong> Son condiciones habilitantes de la cobranza B2B: si no se tiene canal válido, el pago puede no ocurrir por una razón operacional.</li>
+<li><strong>dias_desde_ultimo_pago (r con pago_30d = -0.514)</strong> Mientras más tiempo pasó sin pagar, más “enfriado” está el caso y más difícil es lograr pago rápido. Suele reflejar que el pago ya quedó fuera del flujo normal de tesorería.</li>
+<li><strong>log_saldo (r = -0.515)</strong> Captura la carga económica pendiente real (lo que efectivamente falta pagar).En la empresa X, saldos altos suelen activar más aprobaciones, más control y más fricción administrativa.</li>
+</ul>
+<p>Variables no observables que pueden generar sesgo:</p>
+<ul>
+<li>Liquidez real del cliente</li>
+<li>Prioridades internas del cliente</li>
+<li>Negociaciones externas no registradas</li>
+</ul>
+</section>
+<section id="diseño-experimental" class="level4">
+<h4 class="anchored" data-anchor-id="diseño-experimental"><strong>5. Diseño experimental</strong></h4>
+<p>El diseño experimental que nos permite inferir causalidad es el experimento controlado aleatorizado, es decir, un experimento de A/B test en donde agrupamos en dos grupos: Por un lado, existe el grupo de control al cual no se aplica la estrategia de intervención, por lo cual, seguirán siendo evaluadas con las acciones actuales del negocio.</p>
+<p>Por otro lado, el grupo de tratamiento será el que experimente nuestra estrategia de intervención y es al que dedicaremos más esfuerzos de monitoreo y ejecución. Gracias a la aleatorización tanto las variables observables como las no observables van a estar de manera proporcional en ambos grupos del experimento, de esa manera se elimina el sesgo sistemático ya que al estar repartidas en ambos grupos aleatoriamente, las diferencias que se encuentren en ambos serán atribuibles al tratamiento de los datos y la forma de ejecución del experimento y no así a las variables que fueron omitidas.</p>
+<p>Finalmente, para la empresa X es factible aplicar el experimento porque:</p>
+<ul>
+<li>Se cuenta con más de 1900 registros en los cuales aún no se ha recuperado la deuda, por lo cual, se puede seleccionar una muestra significativa.</li>
+<li>Se cuenta con más de un canal disponible de contacto, entre ellos, el correo electrónico y el número telefónico.</li>
+<li>Se cuenta con una herramienta de CRM en la cual se segmenta los clientes y se pueden realizar recordatorios para contactar con los clientes antes que su deuda supere los 30 días desde su fecha de emisión.</li>
+<li>Se cuenta con un equipo de cobranzas y de ejecutivos comerciales, los cuales pueden trabajar en conjunto para el contacto con los clientes y el uso de la plataforma de CRM.</li>
+<li>La gerencia muestra su apoyo en la realización de experimentos y/o proyectos que mejoren los procesos internos de la empresa, es decir, están abiertos a destinar tiempo y recursos en la mejora continua.</li>
+</ul>
+</section>
+<section id="análisis-de-poder" class="level4">
+<h4 class="anchored" data-anchor-id="análisis-de-poder"><strong>6. Análisis de poder</strong></h4>
+<p>¿Cuál es el efecto mínimo que vale la pena detectar para el negocio? ¿Cuál es el tamaño de muestra que necesito para detectar dicho efecto?</p>
+<div style="border:1px solid #999; padding:14px; border-radius:6px; background-color:#f7f7f7;">
+<strong>Supuestos para el análisis de poder estadístico</strong>
+<ul style="margin-top:8px;">
+<li>
+<b>Supuesto:</b> El negocio considera valioso un aumento de al menos <b>5 puntos porcentuales</b> en la tasa de pago.
+</li>
+<li>
+<b>Efecto mínimo a detectar:</b> 0.05
+</li>
+<li>
+<b>Nivel de significancia:</b> α = 0.05
+</li>
+<li>
+<b>Poder deseado:</b> 80% (0.8)
+</li>
+</ul>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular el tamaño del efecto</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fu">sum</span>(data<span class="sc">$</span>pago_30d) <span class="sc">/</span> <span class="fu">nrow</span>(data)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> p0 <span class="sc">+</span> <span class="fl">0.05</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>power <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>effect_size <span class="ot">&lt;-</span> <span class="fu">ES.h</span>(p1, p0)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>sample_size <span class="ot">&lt;-</span> <span class="fu">pwr.2p.test</span>(<span class="at">h =</span> effect_size, </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="at">sig.level =</span> alpha, </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="at">power =</span> power, </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="at">alternative =</span> <span class="st">"two.sided"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Resultados del análisis de poder</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 27%">
+<col style="width: 18%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Efecto.mínimo.detectable</th>
+<th style="text-align: right;">Nivel.de.significancia..α.</th>
+<th style="text-align: right;">Poder.estadístico</th>
+<th style="text-align: right;">Tamaño.de.muestra.por.grupo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.1278452</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">961</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>El efecto mínimo que vale la pena detectar para el negocio es un incremento de 5 puntos porcentuales en la tasa de pago dentro de los 30 días, es decir, pasar de la tasa actual observada (~16%) a un 21%. Para poder detectar esta mejora con un poder estadístico del 80% y un nivel de significancia del 5%, se requiere un tamaño de muestra de aproximadamente 960 clientes por grupo (control y tratamiento). Este cálculo asegura que el experimento tenga suficiente sensibilidad para evaluar de manera confiable el impacto de la estrategia personalizada de cobranza.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

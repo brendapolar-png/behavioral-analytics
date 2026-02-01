@@ -1,0 +1,196 @@
+## Data
+
+### Importar librerías
+```{r librerias}
+#| message: falseu
+#| warning: false
+
+library(tidyverse)
+library(DataExplorer)
+library(samplingbook)
+```
+
+Base de datos simulada por el profesor
+```{r import-data}
+#| message: false
+
+data = read_csv('C:/Users/BRENDA/Documents/GitHub/behavioral-analytics/clase2/data.csv')
+```
+
+## Ejercicio 1
+
+### Extrae una muestra representativa de clientes entre 18 y 25 años con ingresos no mayores a S/ 5,000 ¿Cuál es el ingreso promedio de tu muestra? (utiliza margen de error de 0.05, nivel de confianza 0.95, y considera la máxima varianza posible)
+
+Primero, delimitar el público objetivo: clientes entre 18 y 25 años con ingresos no mayores a 5,000
+
+```{r}
+poblacion_objetivo <- data %>%
+  filter(edad >= 18, edad <= 25, ingreso_mensual <= 5000)
+  nrow(poblacion_objetivo)
+```
+
+Calcular el tamaño de la muestra
+
+```{r}
+N = nrow(poblacion_objetivo)
+print(N)
+
+n = sample.size.prop(
+    e =  0.05, # margen de error 
+    P = 0.5, # proporción de varianza maxima
+    N = N, # tamaño de nuestra población o público objetivo
+    level = 0.95 # intervalo de confianza
+)
+print(n)
+
+n = n$n
+print(n)
+class(n)
+```
+
+Extraer muestra aleatoria de data
+```{r}
+set.seed(1234)
+muestra_aleatoria_simple <- poblacion_objetivo %>%
+    slice_sample(n = n)
+
+print(muestra_aleatoria_simple)
+```
+
+¿Cuál es el ingreso promedio de tu muestra?
+```{r}
+ingreso_promedio <- mean(muestra_aleatoria_simple$ingreso_mensual)
+print(ingreso_promedio)
+```
+
+El ingreso promedio de la muestra es 1854
+
+## Ejercicio 2
+### ¿Qué variables predicen los ingresos significativamente, y en cuánto? (usa coeficientes no estandarizados)
+
+Preparar variables categóricas
+```{r}
+data_clean = data %>%
+    mutate(
+        sexo = factor(sexo, levels = c('F', 'M')),
+        region = factor(region, levels = c('Lima', 'Provincia')),
+        comportamiento_financiero = factor(comportamiento_financiero, levels = c('Sin deudas', 'Endeudado', 'Sobreendeudado'))
+    )
+```
+ 
+Regresion lineal multiple
+ ```{r regression-analysis}
+# Regresión lineal múltiple
+model = lm(ingreso_mensual ~ sexo + region + edad + comportamiento_financiero, data = data_clean)
+print(summary(model))
+```
+
+Interpretación de los resultados:
+- R2 de 0,2855. Hay alta variabilidad de los datos (se encuentran dispersos)
+- Todas las variables a excepción de Comportamiento Financiero tienen un efecto significativo sobre la variable Ingreso mensual. Es decir, Sexo, Region y Edad, ya que tienen un p-value menor a 0.05. 
+- SexoM: Manteniendo las demás variables constantes, ser hombre genera 636 unidades monetarias más en el ingreso mensual que ser mujer
+- RegionProvincia: Manteniendo las demás variables constantes, vivir en provincia genera 708 unidades monetarias menos en el ingreso mensual que vivir en Lima
+- Edad: Manteniedo las demás variables constantes, cada año adicional de edad genera 57 unidades monetarias más en el ingreso mensual.
+
+## Ejercicio 3
+### Tomando en cuenta los resultados de tu modelo anterior, ¿qué significa el R2? ¿cómo interpretarías los coeficientes estandarizados?
+
+Coeficientes estandarizados con las variables significativas: sexo, region y edad
+```{r standardized-coefficients}
+# Calcular coeficientes estandarizados
+standardized_model = lm(scale(ingreso_mensual) ~ sexo + region + scale(edad), data = data_clean)
+print(summary(standardized_model))
+```
+Interpretación de los resultados:
+- R2 de 0,2855. Hay alta variabilidad de los datos (se encuentran dispersos) 
+- Edad: Un aumento de 1 desviación estándar en la edad se asocia con un aumento de 0.44 desviaciones estándar en el ingreso. Es decir, un incremento típico en la edad está asociado con un aumento del ingreso equivalente al 44% de la variación típica de los ingresos
+
+## Ejercicio 4
+### Se te solicita extraer una muestra representativa de clientes entre 25 y 40 años, que tienen comportamiento financiero "sobreendeudado". Por limitaciones de presupuesto puedes encuestar a no más de 200 clientes. Quieres garantizar que la proporción entre hombres y mujeres en tu muestra sea lo más cercana posible a la de la población. ¿Cuáles son los ingresos promedio de los hombres y las mujeres? ¿Cuáles son los ingresos promedio de la población? (considera margen de error 0.10, nivel de confianza 0.95, y máxima varianza posible por estrato)?
+
+Definir la población objetivo: clientes entre 25 y 40 años, comportamiento "sobreendeudado"
+```{r}
+poblacion_objetivo2 <- data %>%
+  filter(edad >= 25, edad <= 40, comportamiento_financiero == "Sobreendeudado")
+
+nrow(poblacion_objetivo2)
+```
+
+Cálculo del tamaño de la muestra (limitación de 200 encuestas)
+```{r}
+N = nrow(poblacion_objetivo2)
+print(N)
+
+n = sample.size.prop(
+    e =  0.1, # margen de error 
+    P = 0.5, # proporción de varianza maxima
+    N = N, # tamaño de nuestra población o público objetivo
+    level = 0.95 # intervalo de confianza
+)
+print(n)
+
+n = n$n
+print(n)
+```
+La muestra calculada es de 97 personas, lo que está dentro de los límites por presupuesto. Extraer la muestra estratificado respetando la proporción hombres y mujeres
+```{r}
+set.seed(1234)
+muestra_aleatoria_estratificada = poblacion_objetivo2 %>%
+    group_by(sexo)%>%
+    slice_sample(prop = n / nrow(poblacion_objetivo2)) %>%
+    ungroup()
+
+print(muestra_aleatoria_estratificada)
+```
+Ingreso promedio promedio de hombres y mujeres
+```{r}
+ingresos_por_sexo = muestra_aleatoria_estratificada %>%
+  group_by(sexo) %>%
+  summarise(
+    ingreso_promedio = mean(ingreso_mensual, na.rm = TRUE),
+    sd_ingreso = sd(ingreso_mensual, na.rm = TRUE),
+    n = n())
+
+ingresos_por_sexo
+```
+El ingreso promedio de hombres es mayor que el ingreso promedio de las mujeres; sin embargo, los ingresos de los hombres son más dispersos que los ingresos de mujeres (mayor desviación estándar)
+
+Ingreso promedio de la población
+```{r}
+ingreso_total <- muestra_aleatoria_estratificada %>%
+  summarise(
+    ingreso_promedio = mean(ingreso_mensual, na.rm = TRUE),
+    sd_ingreso = sd(ingreso_mensual, na.rm = TRUE),
+    n = n())
+
+ingreso_total
+```
+El ingreso promedio de la población es de 2473; sin embargo, los ingresos se encuentran dispersos.
+
+## Ejercicio 5
+```{r import-data}
+#| message: false
+
+data_IBM= read_csv('C:/Users/BRENDA/Documents/GitHub/behavioral-analytics/clase2/HR-Employee-Attrition.csv')
+names(data_IBM)
+```
+```{r import-data}
+unique(data_IBM$BusinessTravel)
+```
+Preparar las variables
+```{r data-transformation}
+data_clean_ibm = data_IBM %>%
+    mutate(
+        Attrition = factor(Attrition, levels = c('Yes', 'No')),
+        BusinessTravel = factor(BusinessTravel, levels = c('Travel_Rarely', 'Travel_Frequently', 'Non-Travel')),
+    )
+```
+```{r logistic-regression}
+# Crear variable binaria para Attrition
+data_clean_ibm = data_clean_ibm %>%
+    mutate(Attrition = ifelse(Attrition == 'No', 0, 1))
+# Regresión logística
+logistic_model = glm(Attrition ~ BusinessTravel, data = data_clean_ibm, family = binomial)
+
+print(tidy(logistic_model, exponentiate = TRUE))
+```

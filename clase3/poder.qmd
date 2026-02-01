@@ -1,0 +1,51 @@
+
+```{r}
+library(pwr)
+```
+
+Estimamos el tamaño del efecto.
+```{r}
+ES.h(0.5, 0.6)
+```
+
+
+Calculamos el tamaño de la muestra necesario para detectar ese tamaño del efecto con un poder del 80% y un nivel de significancia del 5%.
+```{r}
+pwr.2p.test(h = 0.2, sig.level = 0.05, power = 0.8, alternative = "two.sided")
+```
+
+También podemos calcular el tamaño del efecto que encontraremos, con la muestra que tenemos
+
+```{r}
+pwr.2p.test(n = 50, sig.level = 0.05, power = 0.8, alternative = "two.sided")
+```
+
+Calculamos qué diferencia nos da ese h
+
+```{r}
+ES.h(0.5, 0.694)
+```
+
+```{r}
+pwr.2p.test(n = 50, sig.level = 0.05, h = 0.2, alternative = "two.sided")
+```
+
+Es importante notar que el n necesario depende de cuál es la proporción base.
+
+```{r}
+pwr.2p.test(h = ES.h(0.05, 0.15), sig.level = 0.05, power = 0.8, alternative = "two.sided")
+```
+
+```{r}
+pwr.p.test(h = ES.h(0.1, 0.2), sig.level = 0.05, power = 0.8, alternative = "two.sided")
+```
+
+```{r}
+pwr.2p.test(h = ES.h(0.5, 0.6), sig.level = 0.05, power = 0.8, alternative = "two.sided")
+```
+
+
+```{r}
+pwr.2p.test(h = ES.h(0.7, 0.8), sig.level = 0.05, power = 0.8, alternative = "two.sided")
+```
+

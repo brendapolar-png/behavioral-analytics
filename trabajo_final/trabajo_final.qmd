@@ -1,8 +1,11 @@
 ---
 title: "TRABAJO FINAL - Behavioral Analytics"
-subtitle: "Expermiento de negocio: caso de compañía de seguros B2B"
-format: html
+subtitle: "Experimento de negocio: caso de compañía de seguros B2B"
+format:
+  html:
+    embed-resources: true
 ---
+
 #### **Integrantes:**
 * Kamilla Contreras
 * Jennifer Meza 
